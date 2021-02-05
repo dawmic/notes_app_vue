@@ -1,42 +1,41 @@
 <template>
   <div id="app">
-    
   <h1>Just a notebook.</h1>
-  <noteForm  @sendForm="addNote"
-     />
+    <textarea :class="{errorInfo : error}"
+     name="notebook"
+      id=""
+       cols="30" rows="2"
+        v-model="text"
+         ref="textarea"
+          placeholder="your note">
+         
+          </textarea>
   
-  
-  
+    <button class="submitBtn" @click="addNote">Add note</button>
   <div class="note-container">
  <p v-if="tablica.length < 1" class="emptyInfo">no notes yet 😥</p>
- 
  <div  v-for="item in tablica" v-bind:key="item.id">
-   
     <note 
       @deleteNote="deleteNote"
     :oneNote='item'
-   />
-   </div>
-   
-  </div>
- 
+    />
+    </div>
+  </div>   
   </div>
 </template>
 
 <script>
 import Note from './components/Note.vue'
-import NoteForm from './components/noteForm.vue'
-
-
 
 export default {
   name: 'App',
   components: {
-    Note, NoteForm, 
+    Note
   },
   data(){
     return{
-      
+      text: '',
+      error: false,
       
       tablica: [
         {
@@ -48,22 +47,26 @@ export default {
     }
   },
   methods:{
-    addNote(msg){
-     
+    addNote(){
+      if(this.text < 1) {
+        this.error = true;
+        return;
+      }
       this.tablica = [{
-        noteText : msg,
+        noteText : this.text,
         dateNow: new Date(Date.now()).toLocaleString(),
         id: this.tablica.length+1,
 }, ...this.tablica];
-localStorage.setItem('list', JSON.stringify(this.tablica));
-  
 
-  
+  this.text = '';
+  this.error = false;
+  this.$refs.textarea.focus();
+
+  localStorage.setItem('list', JSON.stringify(this.tablica));
 },
   deleteNote(id){
     this.tablica = this.tablica.filter(item => item.id !== id);
   },
-   
       
     
 
@@ -162,13 +165,11 @@ textarea:focus{
 }
 .note-container{
   width: 100%;
-  
   display: flex;
 flex-direction: row;
 flex-wrap: wrap;
 justify-content: flex-start;
 align-items: flex-start;  
-
 }
 
 
