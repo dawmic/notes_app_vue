@@ -1,5 +1,5 @@
 # personal-notes
-
+#### [Live](https://xenodochial-hopper-56df6c.netlify.app/)
 ## Project setup
 ```
 npm install
